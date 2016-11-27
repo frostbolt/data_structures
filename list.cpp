@@ -66,9 +66,9 @@ void insertAfter(list *&a, int pos, int varible) {
 		for (int i = 0; i < pos; i++) {
 			if (!(temp->next)) { throw(LIST_TOO_SHORT); enougthElements=false; break;
 			}else {
-                temp = temp->next;
-            }
-        }
+				temp = temp->next;
+			}
+		}
 		if (enougthElements) {
 			element->next = temp->next;
 			temp->next = element;
@@ -90,8 +90,8 @@ void insertBefore(list *&a, int pos, int varible) {
 			for (int i = 0; i < pos - 1; i++) {
 				if (!((temp->next)->next)) { throw(LIST_TOO_SHORT); enougthElements=false; break;
 				} else {
-                    temp = temp->next;
-                }
+					temp = temp->next;
+				}
 			}
 			if (enougthElements) {
 				list *element = new list;
@@ -122,20 +122,20 @@ void del(list *&a, int pos) {
 	bool enougthElements=true;
 	list *temp = a;
 	if (temp) {
-        if (pos){
-             for (int i = 0; i < pos - 1; i++) {
-                if (!((temp->next)->next)) { throw(LIST_TOO_SHORT); enougthElements=false; break;
-                } else {
-                    temp = temp->next;
-                }
-             }
-            if (enougthElements) {
-                list *temp1 = temp->next;
-                temp->next = temp1->next;
-                delete temp1;
-            }
+		if (pos){
+			 for (int i = 0; i < pos - 1; i++) {
+				if (!((temp->next)->next)) { throw(LIST_TOO_SHORT); enougthElements=false; break;
+				} else {
+					temp = temp->next;
+				}
+			 }
+			if (enougthElements) {
+				list *temp1 = temp->next;
+				temp->next = temp1->next;
+				delete temp1;
+			}
 		} else {
-		    shift(a);
+			shift(a);
 		}
 	} else {
 		throw(LIST_EMPTY);
@@ -181,19 +181,19 @@ int nthElement(list *a, int pos) {
 	bool enougthElements=true;
 	list *temp = a;
 	if (temp) {
-        if(pos){
-            for (int i = 0; i < pos - 1; i++) {
-                if (!((temp->next)->next)) { throw(LIST_TOO_SHORT); enougthElements=false; break;
-                } else {
-                    temp = temp->next;
-                }
-            }
-            if (enougthElements) {
-                return (temp->next)->inf;
-            }
-        } else {
-            return temp->inf;
-        }
+		if(pos){
+			for (int i = 0; i < pos - 1; i++) {
+				if (!((temp->next)->next)) { throw(LIST_TOO_SHORT); enougthElements=false; break;
+				} else {
+					temp = temp->next;
+				}
+			}
+			if (enougthElements) {
+				return (temp->next)->inf;
+			}
+		} else {
+			return temp->inf;
+		}
 	} else {
 		throw(LIST_EMPTY);
 		return -1;
@@ -206,11 +206,9 @@ list* addressByValue(list *&a, int val) {
 	list *temp = a;
 	list *result = new list;
 	list *r = result;
-
 	while (temp) {
 		if (temp->inf == val) {
 			r->inf = i;
-
 			r->next = new list;
 			if (temp->next) r = r->next;
 		}
@@ -221,7 +219,7 @@ list* addressByValue(list *&a, int val) {
 	return result;
 }
 
-void copyList(list *&first, list *&second){
+void copyList(list *&first, list *&second) {
 	memfree(second);
 	second = new list;
 	list *p = first;
@@ -306,6 +304,31 @@ void sortList(list *first) {
 }
 
 
+void sortedInsert(list *&first, list *second) {
+	if (!first || second->inf < first->inf) {
+		second->next = first;
+		first = second;
+	} else {
+		list* current = first;
+		while (current->next && !(second->inf < (current->next)->inf)) {
+			current = current->next;
+		}
+		second->next = current->next;
+		current->next = second;
+	}
+}
+
+list* insertionSort(list *&first) {
+	list* result = 0;
+	while (first) {
+		list* second = first;
+		first = first->next;
+		sortedInsert(result, second);
+	}
+	return result;
+}
+
+
 
 void ui(list *first) {
 	int num = 1;
@@ -314,39 +337,40 @@ void ui(list *first) {
 	int n;
 	int pos;
 	while (num) {
-        try {
-            cout << "\n========================\n  0 -- exit; \n  1 -- fillInRand; \n  2 -- printList; \n  3 -- pushFront; \n  4 -- insertAfter; \n  5 -- del;\n";
-            cout << "  6 -- pushBack; \n  7 -- insertBefore; \n  8 -- shift; \n  9 -- pop; \n 10 -- memfree; \n 11 -- countElements; \n 12 -- nthElement; \n";
-            cout << " 13 -- copyList; \n 14 -- fragmentation; \n 15 -- sortList; \n 16 -- addressByValue; \n";
-            cout << "========================\ninput: ";
-            cin >> num;
-            cout << endl;
-            switch (num) {
-                case 0: break;
-                case 1: cout << "size: "; cin >> n; fillInRand(first,n); break;
-                case 2: printList(first); break;
-                case 3: cout << "num: ";  cin >> n; pushFront(first,n); break;
-                case 4: cout << "pos: "; cin >> pos; cout << "num: ";  cin >> n; insertAfter(first, pos, n); break;
-                case 5: cout << "pos: "; cin >> pos; del(first, pos); break;
-                case 6: cout << "num: ";  cin >> n; pushBack(first,n); break;
-                case 7: cout << "pos: "; cin >> pos; cout << "num: ";  cin >> n; insertBefore(first,pos,n); break;
-                case 8: cout << shift(first) << endl; break;
-                case 9: cout << pop(first) << endl; break;
-                case 10: memfree(first); break;
-                case 11: cout<< countElements(first) << endl; break;
-                case 12: cout << "pos: "; cin >> pos; cout<< nthElement(first, pos) << endl; break;
-                case 13: copyList(first, second); cout<< "copied list:" << endl; printList(second); break;
-                case 14: fragmentation(first, second, third); cout<< "fragments:" << endl; printList(second); cout<< "and:" << endl;printList(third); break;
-                case 15: sortList(first);  break;
-                case 16: cout << "num: ";  cin >> n; printList(addressByValue(first,n)); break;
-                default: cout << "error" << endl;
-            }
+		try {
+			cout << "\n========================\n  0 -- exit; \n  1 -- fillInRand; \n  2 -- printList; \n  3 -- pushFront; \n  4 -- insertAfter; \n  5 -- del;\n";
+			cout << "  6 -- pushBack; \n  7 -- insertBefore; \n  8 -- shift; \n  9 -- pop; \n 10 -- memfree; \n 11 -- countElements; \n 12 -- nthElement; \n";
+			cout << " 13 -- copyList; \n 14 -- fragmentation; \n 15 -- sortList; \n 16 -- addressByValue; \n 17 -- insertionSort; \n";
+			cout << "========================\ninput: ";
+			cin >> num;
+			cout << endl;
+			switch (num) {
+				case 0: break;
+				case 1: cout << "size: "; cin >> n; fillInRand(first,n); break;
+				case 2: printList(first); break;
+				case 3: cout << "num: ";  cin >> n; pushFront(first,n); break;
+				case 4: cout << "pos: "; cin >> pos; cout << "num: ";  cin >> n; insertAfter(first, pos, n); break;
+				case 5: cout << "pos: "; cin >> pos; del(first, pos); break;
+				case 6: cout << "num: ";  cin >> n; pushBack(first,n); break;
+				case 7: cout << "pos: "; cin >> pos; cout << "num: ";  cin >> n; insertBefore(first,pos,n); break;
+				case 8: cout << shift(first) << endl; break;
+				case 9: cout << pop(first) << endl; break;
+				case 10: memfree(first); break;
+				case 11: cout<< countElements(first) << endl; break;
+				case 12: cout << "pos: "; cin >> pos; cout<< nthElement(first, pos) << endl; break;
+				case 13: copyList(first, second); cout<< "copied list:" << endl; printList(second); break;
+				case 14: fragmentation(first, second, third); cout<< "fragments:" << endl; printList(second); cout<< "and:" << endl;printList(third); break;
+				case 15: sortList(first);  break;
+				case 16: cout << "num: ";  cin >> n; printList(addressByValue(first,n)); break;
+				case 17: printList(insertionSort(first));  break;
+				default: cout << "error" << endl;
+			}
 		}
 		catch(int ex) {
-		    switch (ex){
-                case LIST_EMPTY: cout << "LIST EMPTY" << endl; break;
-                case LIST_TOO_SHORT: cout << "LIST IS TOO SHORT" << endl; break;
-		    }
+			switch (ex){
+				case LIST_EMPTY: cout << "LIST EMPTY" << endl; break;
+				case LIST_TOO_SHORT: cout << "LIST IS TOO SHORT" << endl; break;
+			}
 
 		}
 	}
