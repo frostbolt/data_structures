@@ -142,7 +142,7 @@ void del(list *&a, int pos) {
 	}
 }
 
-int pop(list *&a) { // èçâëå÷ü ïîñëåäíèé
+int pop(list *&a) {
 	list* prev = 0;
 	int val;
 	if (!a) {
@@ -166,6 +166,7 @@ void memfree(list *&a) {
 		delete prev;
 	}
 	delete a;
+	if (!a) a = new list;
 }
 
 int countElements(list *a) {
@@ -215,24 +216,28 @@ int nthElement(list *a, int pos) {
 // }
 
 void copyList(list *&first, list *&second){
+	memfree(second);
 	list *p = first;
+	list *s = second;
 	if (p) {
-		second->inf = p->inf;
+		s->inf = p->inf;
 		p = p->next;
 		while(p) {
-			second->next = new list;
-			second = second->next;
-			second->inf = p->inf;
+			s->next = new list;
+			s = s->next;
+			s->inf = p->inf;
 			p = p->next;
 		}
-		second->next = 0;
+		s->next = 0;
 	} else {
 		throw(LIST_EMPTY);
 	}
 }
 
 
-void fragmentation(list *first, list *&second, list *&third) {
+void fragmentation(list *&first, list *&second, list *&third) {
+	memfree(second);
+	memfree(third);
 	list *p = first;
 	list *p1 = second;
 	list *p2 = third;
