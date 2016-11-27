@@ -1,7 +1,10 @@
-#include <stdlib.h> 
-#include <time.h> 
-#include <iostream> 
-#include <conio.h> 
+#include <stdlib.h>
+#include <time.h>
+#include <iostream>
+#include <conio.h>
+
+const int LIST_TOO_SHORT = 0;
+const int LIST_EMPTY = 1;
 
 using namespace std;
 
@@ -32,14 +35,14 @@ void printList(list *a) {
 	cout << endl;
 }
 
-list* pushFront(int varible, list *a) {
+void pushFront(list *&a, int varible) {
 	list *first = new list;
 	first->inf = varible;
 	first->next = a;
-	return first;
+	a = first;
 }
 
-void pushBack(int varible, list *a) {
+void pushBack(list *&a, int varible) {
 	list *temp = a;
 	list *element = new list;
 	element->next = 0;
@@ -50,41 +53,45 @@ void pushBack(int varible, list *a) {
 		}
 		temp->next = element;
 	} else {
-		pushFront(varible, a);
+		pushFront(a, varible);
 	}
 }
 
-void insertAfter(int varible, int pos, list *a) {
+void insertAfter(list *&a, int pos, int varible) {
 	bool enougthElements=true;
 	list *temp = a;
 	list *element = new list;
 	element->inf = varible;
 	if (temp){
 		for (int i = 0; i < pos; i++) {
-			if (!temp->next) { cout << "Error. list is too short." << endl; enougthElements=false; break; }
-			temp = temp->next;
-		}
+			if (!(temp->next)) { throw(LIST_TOO_SHORT); enougthElements=false; break;
+			}else {
+                temp = temp->next;
+            }
+        }
 		if (enougthElements) {
 			element->next = temp->next;
 			temp->next = element;
 		}
 	} else {
-		cout << "Error. list is empty." << endl;
+		throw(LIST_EMPTY);
 	}
 }
 
-void insertBefore(int varible, int pos, list *a) {
+void insertBefore(list *&a, int pos, int varible) {
 	bool enougthElements=true;
 	list *temp = a;
 	if (temp){
 		if (!pos) {
-			pushFront(varible, a);
+			pushFront(a, varible);
 		} else if (pos == 1) {
-			insertAfter(varible, 0, a);
+			insertAfter(a,0, varible);
 		} else {
 			for (int i = 0; i < pos - 1; i++) {
-				if (!temp->next) { cout << "Error. list is too short." << endl; enougthElements=false; break; }
-				temp = temp->next;
+				if (!((temp->next)->next)) { throw(LIST_TOO_SHORT); enougthElements=false; break;
+				} else {
+                    temp = temp->next;
+                }
 			}
 			if (enougthElements) {
 				list *element = new list;
@@ -94,33 +101,15 @@ void insertBefore(int varible, int pos, list *a) {
 			}
 		}
 	} else {
-		cout << "Error. list is empty." << endl;
+		throw(LIST_EMPTY);
 	}
 }
 
-void del(int pos, list *a) {
-	bool enougthElements=true;
-	list *temp = a;
-	if (temp) {
-		for (int i = 0; i < pos - 1; i++) {
-			if (!temp->next) { cout << "Error. list is too short." << endl; enougthElements=false; break; }
-			temp = temp->next;
-		}
-		if (enougthElements) {
-			list *temp1 = temp->next;
-			temp->next = temp1->next;
-			delete temp1;
-		}
-	} else {
-		cout << "Error. list is empty." << endl;
-	}
-}
-
-int shift(list *&a) {
+int shift(list *&a) { // èçâëå÷ü ïåðâûé
 	list* prev = 0;
 	int val;
 	if (!a) {
-		cout << "Error. list is empty." << endl;
+		throw(LIST_EMPTY);
 		return -1;
 	}
 	prev = a;
@@ -129,12 +118,35 @@ int shift(list *&a) {
 	delete prev;
 	return val;
 }
+void del(list *&a, int pos) {
+	bool enougthElements=true;
+	list *temp = a;
+	if (temp) {
+        if (pos){
+             for (int i = 0; i < pos - 1; i++) {
+                if (!((temp->next)->next)) { throw(LIST_TOO_SHORT); enougthElements=false; break;
+                } else {
+                    temp = temp->next;
+                }
+             }
+            if (enougthElements) {
+                list *temp1 = temp->next;
+                temp->next = temp1->next;
+                delete temp1;
+            }
+		} else {
+		    shift(a);
+		}
+	} else {
+		throw(LIST_EMPTY);
+	}
+}
 
-int pop(list *&a) {
+int pop(list *&a) { // èçâëå÷ü ïîñëåäíèé
 	list* prev = 0;
 	int val;
 	if (!a) {
-		cout << "Error. list is empty." << endl;
+		throw(LIST_EMPTY);
 		return -1;
 	}
 	prev = a;
@@ -165,19 +177,25 @@ int countElements(list *a) {
 	return amount;
 }
 
-int nthElement(int pos, list *a) {
+int nthElement(list *a, int pos) {
 	bool enougthElements=true;
 	list *temp = a;
 	if (temp) {
-		for (int i = 0; i < pos - 1; i++) {
-			if (!temp->next) { cout << "Error. list is too short." << endl; enougthElements=false; break; }
-			temp = temp->next;
-		}
-		if (enougthElements) {
-			return (temp->next)->inf;
-		}
+        if(pos){
+            for (int i = 0; i < pos - 1; i++) {
+                if (!((temp->next)->next)) { throw(LIST_TOO_SHORT); enougthElements=false; break;
+                } else {
+                    temp = temp->next;
+                }
+            }
+            if (enougthElements) {
+                return (temp->next)->inf;
+            }
+        } else {
+            return temp->inf;
+        }
 	} else {
-		cout << "Error. list is empty." << endl;
+		throw(LIST_EMPTY);
 		return -1;
 	}
 	return -1;
@@ -196,12 +214,11 @@ int nthElement(int pos, list *a) {
 // 	return result;
 // }
 
-void copyList(list *first, list *&second){
+void copyList(list *&first, list *&second){
 	list *p = first;
 	if (p) {
 		second->inf = p->inf;
 		p = p->next;
-		list *newfirst = second;
 		while(p) {
 			second->next = new list;
 			second = second->next;
@@ -210,7 +227,7 @@ void copyList(list *first, list *&second){
 		}
 		second->next = 0;
 	} else {
-		cout << "Error. list is empty." << endl;
+		throw(LIST_EMPTY);
 	}
 }
 
@@ -240,28 +257,28 @@ void fragmentation(list *first, list *&second, list *&third) {
 }
 
 
-void quicksort(int a, int b, int *arr){ 
-	int center = arr[(a + b) / 2]; 
-	int na = a; int nb = b; 
-	while (na <= nb) { 
-		while (arr[na] < center) na++; 
-		while (arr[nb] > center) nb--; 
-		if (na <= nb) { 
-			int cup; 
-			cup=arr[na]; 
-			arr[na]=arr[nb]; 
-			arr[nb]=cup; 
-			na++; 
-			nb--; 
-		} 
-	} 
-	if (na<b) quicksort(na, b, arr); 
-	if (a<nb) quicksort(a, nb, arr); 
-} 
+void quicksort(int a, int b, int *arr){
+	int center = arr[(a + b) / 2];
+	int na = a; int nb = b;
+	while (na <= nb) {
+		while (arr[na] < center) na++;
+		while (arr[nb] > center) nb--;
+		if (na <= nb) {
+			int cup;
+			cup=arr[na];
+			arr[na]=arr[nb];
+			arr[nb]=cup;
+			na++;
+			nb--;
+		}
+	}
+	if (na<b) quicksort(na, b, arr);
+	if (a<nb) quicksort(a, nb, arr);
+}
 
 void sortList(list *first) {
 	list *temp = first;
-	int listSize = Count(temp);
+	int listSize = countElements(temp);
 	int *a = new int[listSize];
 	for (int i = 0; i < listSize; i++) {
 		a[i] = temp->inf;
@@ -278,26 +295,44 @@ void sortList(list *first) {
 
 void ui(list *first) {
 	int num = 1;
+	list *second = 0;
+	list *third = 0;
+	int n;
+	int pos;
 	while (num) {
-		cout << "\n========================\n 1 -- fillInRand; \n 2 -- printList; \n 3 -- pushFront 3333; \n 4 -- insertAfter 4444; \n 0 -- exit; \n 5 -- del 5;\n";
-		cout << " 6 -- pushBack 6666; \n 7 -- insertBefore 7; \n 8 -- shift; \n 9 -- pop; \n 10 -- memfree; \n";
-		cout << "========================\ninput: ";
-		cin >> num;
-		cout << endl;
-		switch (num) {
-		case 0: break;
-		case 1: fillInRand(first, 10); break;
-		case 2: printList(first); break;
-		case 3: first = pushFront(3333, first); break;
-		case 4: insertAfter(4444, 4, first); break;
-		case 5: del(5, first); break;
-		case 6: pushBack(6666, first); break;
-		case 7: insertBefore(7777, 7, first); break;
-		case 8: cout << shift(first) << endl; break;
-		case 9: cout << pop(first) << endl; break;
-		case 10: memfree(first); break;
-		case 11: countElements(first); break;
-		default: cout << "error" << endl;
+        try {
+            cout << "\n========================\n  0 -- exit; \n  1 -- fillInRand; \n  2 -- printList; \n  3 -- pushFront; \n  4 -- insertAfter; \n  5 -- del;\n";
+            cout << "  6 -- pushBack; \n  7 -- insertBefore; \n  8 -- shift; \n  9 -- pop; \n 10 -- memfree; \n 11 -- countElements; \n 12 -- nthElement; \n";
+            cout << " 13 -- copyList; \n 14 -- fragmentation; \n 15 -- sortList; \n";
+            cout << "========================\ninput: ";
+            cin >> num;
+            cout << endl;
+            switch (num) {
+                case 0: break;
+                case 1: cout << "size: "; cin >> n; fillInRand(first,n); break;
+                case 2: printList(first); break;
+                case 3: cout << "num: ";  cin >> n; pushFront(first,n); break;
+                case 4: cout << "pos: "; cin >> pos; cout << "num: ";  cin >> n; insertAfter(first, pos, n); break;
+                case 5: cout << "pos: "; cin >> pos; del(first, pos); break;
+                case 6: cout << "num: ";  cin >> n; pushBack(first,n); break;
+                case 7: cout << "pos: "; cin >> pos; cout << "num: ";  cin >> n; insertBefore(first,pos,n); break;
+                case 8: cout << shift(first) << endl; break;
+                case 9: cout << pop(first) << endl; break;
+                case 10: memfree(first); break;
+                case 11: cout<< countElements(first) << endl; break;
+                case 12: cout << "pos: "; cin >> pos; cout<< nthElement(first, pos) << endl; break;
+                case 13: copyList(first, second); cout<< "copied list:" << endl; printList(second); break;
+                case 14: fragmentation(first, second, third); cout<< "fragments:" << endl; printList(second); cout<< "and:" << endl;printList(third); break;
+                case 15: sortList(first);  break;
+                default: cout << "error" << endl;
+            }
+		}
+		catch(int ex) {
+		    switch (ex){
+                case LIST_EMPTY: cout << "LIST EMPTY" << endl; break;
+                case LIST_TOO_SHORT: cout << "LIST IS TOO SHORT" << endl; break;
+		    }
+
 		}
 	}
 }
