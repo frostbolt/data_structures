@@ -105,7 +105,7 @@ void insertBefore(list *&a, int pos, int varible) {
 	}
 }
 
-int shift(list *&a) { // èçâëå÷ü ïåðâûé
+int shift(list *&a) {
 	list* prev = 0;
 	int val;
 	if (!a) {
@@ -205,12 +205,15 @@ list* addressByValue(list *&a, int val) {
 	int i = 0;
 	list *temp = a;
 	list *result = new list;
+	result->inf = -1;
 	list *r = result;
 	while (temp) {
 		if (temp->inf == val) {
+			if (r->inf!=-1){
+				r->next = new list;
+				r = r->next;
+			}
 			r->inf = i;
-			r->next = new list;
-			if (temp->next) r = r->next;
 		}
 		i++;
 		temp = temp->next;
