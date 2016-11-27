@@ -166,7 +166,6 @@ void memfree(list *&a) {
 		delete prev;
 	}
 	delete a;
-	if (!a) a = new list;
 }
 
 int countElements(list *a) {
@@ -202,21 +201,29 @@ int nthElement(list *a, int pos) {
 	return -1;
 }
 
-// list* addressByValue(int val, list *a) {
-// 	list *temp = a;
-// 	list *result;
+list* addressByValue(list *&a, int val) {
+	int i = 0;
+	list *temp = a;
+	list *result = new list;
+	list *r = result;
 
-// 	while (temp) {
-// 		if (temp->inf == val) {
-// 			result->inf = val;
-// 			result->next = new list;
-// 		}
-// 	}
-// 	return result;
-// }
+	while (temp) {
+		if (temp->inf == val) {
+			r->inf = i;
+
+			r->next = new list;
+			if (temp->next) r = r->next;
+		}
+		i++;
+		temp = temp->next;
+	}
+	r->next = 0;
+	return result;
+}
 
 void copyList(list *&first, list *&second){
 	memfree(second);
+	second = new list;
 	list *p = first;
 	list *s = second;
 	if (p) {
@@ -238,6 +245,8 @@ void copyList(list *&first, list *&second){
 void fragmentation(list *&first, list *&second, list *&third) {
 	memfree(second);
 	memfree(third);
+	second = new list;
+	third = new list;
 	list *p = first;
 	list *p1 = second;
 	list *p2 = third;
@@ -308,7 +317,7 @@ void ui(list *first) {
         try {
             cout << "\n========================\n  0 -- exit; \n  1 -- fillInRand; \n  2 -- printList; \n  3 -- pushFront; \n  4 -- insertAfter; \n  5 -- del;\n";
             cout << "  6 -- pushBack; \n  7 -- insertBefore; \n  8 -- shift; \n  9 -- pop; \n 10 -- memfree; \n 11 -- countElements; \n 12 -- nthElement; \n";
-            cout << " 13 -- copyList; \n 14 -- fragmentation; \n 15 -- sortList; \n";
+            cout << " 13 -- copyList; \n 14 -- fragmentation; \n 15 -- sortList; \n 16 -- addressByValue; \n";
             cout << "========================\ninput: ";
             cin >> num;
             cout << endl;
@@ -329,6 +338,7 @@ void ui(list *first) {
                 case 13: copyList(first, second); cout<< "copied list:" << endl; printList(second); break;
                 case 14: fragmentation(first, second, third); cout<< "fragments:" << endl; printList(second); cout<< "and:" << endl;printList(third); break;
                 case 15: sortList(first);  break;
+                case 16: cout << "num: ";  cin >> n; printList(addressByValue(first,n)); break;
                 default: cout << "error" << endl;
             }
 		}
