@@ -16,7 +16,7 @@ struct BinTree {
 };
 
 int irand() {
-	return rand() % 101 - 50;
+	return rand() % 41 - 20;
 }
 
 BinTree* insert(BinTree *root, int val) {
@@ -37,35 +37,33 @@ BinTree* insert(BinTree *root, int val) {
 void printTreeInARow(BinTree *a) {
 	BinTree *temp= a;
 	if (temp) {
-		cout << temp->data << "\t";
-		printTree(temp->left);
-		printTree(temp->right);
+		cout << temp->data << "  ";
+		printTreeInARow(temp->left);
+		printTreeInARow(temp->right);
 	}
 }
 
-void printTreeAsATree(BinTree *a) {
-	BinTree *temp= a;
-	if (temp) {
-		cout << temp->data << "\t";
-		printTree(temp->left);
-		printTree(temp->right);
+BinTree* createTree(BinTree *&a, int n) {
+	for (int i = 0; i < n; i++)	{
+		a = insert(a, irand());
 	}
+	return a;
 }
 
-void ui(BinTree *&f) {
-	BinTree *first = 0;
+
+void ui(BinTree *&first) {
 	int num = 1, n;
 	while (num) {
 		try {
-			cout << "\n========================\n  0 -- exit; \n  1 -- createTree; \n  2 -- insert; \n  3 -- printTree;";
+			cout << "\n========================\n  0 -- exit; \n  1 -- createTree; \n  2 -- insert; \n  3 -- printTreeInARow;";
 			cout << "\n========================\ninput: ";
 			cin >> num;
 			cout << endl;
 			switch (num) {
 			case 0: break;
-				//case 1: cout<< "n: "; cin >> n; createTree(first, n); break;
+			case 1: cout<< "n: "; cin >> n; first = createTree(first, n); break;
 			case 2: cout << "val: "; cin >> n; first = insert(first, n); break;
-			case 3: printTree(first); cout << endl; break;
+			case 3: printTreeInARow(first); cout << endl; break;
 			default: cout << "error" << endl;
 			}
 		}
