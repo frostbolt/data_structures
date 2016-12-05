@@ -43,7 +43,7 @@ void printTreeInARow(BinTree *a) {
 }
 
 void createTree(BinTree *&a, int n) {
-	for (int i = 0; i < n; i++)	{
+	for (int i = 0; i < n; i++) {
 		insert(a, irand());
 	}
 }
@@ -81,13 +81,12 @@ int countLeaves(BinTree *a) {
 int degree(BinTree *a, int val) {
 	// not a mistake in the line below...
 	if (a = search(a, val)){ 
-		int n = countLeaves(a); int degree=0;
-		if (a->left || a->right){
-			for (int k = n; k > 0; k--) {
-				degree += factorial(n)/(factorial(k)*factorial(n-k));
-			}
+		if (a->left && a->right) {
+			return 2;
+		} else if (a->left && a->right) {
+			return 1;
 		}
-		return degree;
+		return 0;
 	}
 	return -1;
 }
