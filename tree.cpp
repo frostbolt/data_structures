@@ -18,10 +18,6 @@ int irand() {
 	return rand() % 41 - 20;
 }
 
-int factorial(int a) {
-	return (a==1 || a == 0)?1:a*factorial(a-1);
-}
-
 void insert(BinTree *&root, int val) {
 	if (!root) {
 		root = new BinTree;
