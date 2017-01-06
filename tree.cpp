@@ -54,11 +54,32 @@ BinTree* search(BinTree *a, int val) {
 	}
 }
 
+BinTree* searchTwo(BinTree *a, int val) {
+    if (!a || a->data == val) {
+		return a;
+	} else {
+	    BinTree* right = searchTwo(a->right, val);
+	    return (right)?right:searchTwo(a->left, val);
+	}
+}
+
+int level(BinTree *a, int val) {
+	if (!a) {
+        throw(TREE_SHORT);
+	} else if (a->data == val) {
+	    return 0;
+	} else if (val > a->data) {
+		return 1 + level(a->right, val);
+	} else {
+		return 1 + level(a->left, val);
+	}
+}
+
 int count(BinTree *a) {
 	int counter = 0;
 	if (a) {
-		counter+= count(a->left);
-		counter+= count(a->right);
+		counter += count(a->left);
+		counter += count(a->right);
 		return counter+1;
 	}
 	return 0;
@@ -67,8 +88,8 @@ int count(BinTree *a) {
 int countLeaves(BinTree *a) {
 	int counter = 0;
 	if (a) {
-		counter+= countLeaves(a->left);
-		counter+= countLeaves(a->right);
+		counter += countLeaves(a->left);
+		counter += countLeaves(a->right);
 		return ((a->left || a->right)?counter:counter+1);
 	}
 	return 0;
@@ -76,15 +97,46 @@ int countLeaves(BinTree *a) {
 
 int degree(BinTree *a, int val) {
 	// not a mistake in the line below...
-	if (a = search(a, val)){ 
+	if (a = search(a, val)){
 		if (a->left && a->right) {
 			return 2;
-		} else if (a->left && a->right) {
+		} else if (a->left || a->right) {
 			return 1;
 		}
 		return 0;
 	}
 	return -1;
+}
+
+BinTree* searchForParent(BinTree *a, int val) {
+    if ((a->left)->data == val || (a->right)->data == val) {
+        return a;
+	} else {
+	     return ((a->data > val)? searchForParent(a->right, val) : searchForParent(a->left, val));
+	}
+}
+
+void delTree(BinTree *a) {
+	if (!a) return;
+    delTree(a->left);
+    delTree(a->right);
+    delete a;
+}
+
+void delSubtree(BinTree *a, int val) {
+    a = searchForParent(a,val);
+    if ((a->left)->data == val) {
+        delTree(a->left);
+        a->left = 0;
+    } else {
+        delTree(a->right);
+        a->right = 0;
+    }
+}
+
+void delNode(BinTree *a, int val) {
+    a = searchForParent(a,val);
+    BinTree* temp = ((a->left)->data == val)? a->left : a->right;
 }
 
 int height(BinTree *a) {
@@ -101,7 +153,8 @@ void ui(BinTree *&first) {
 	while (num) {
 		try {
 			cout << "\n========================\n  0 -- exit; \n  1 -- createTree; \n  2 -- insert; \n  3 -- printTreeInARow; \n  4 -- search; \n  5 -- count;";
-			cout << "\n  6 -- countLeaves; \n  7 -- degree; \n  8 -- height;";
+			cout << "\n  6 -- countLeaves; \n  7 -- degree; \n  8 -- height; \n  9 -- level; \n 10 -- searchTwo; \n 11 -- delSubtree; \n 12 -- delTree;";
+			cout << "\n 13 -- delNode;";
 			cout << "\n========================\ninput: ";
 			cin >> num;
 			cout << endl;
@@ -115,6 +168,11 @@ void ui(BinTree *&first) {
 				case 6: cout << countLeaves(first) << endl; break;
 				case 7: cout << "val: "; cin >> n; cout << degree(first, n) << endl; break;
 				case 8: cout << height(first) << endl; break;
+				case 9: cout << "val: "; cin >> n; cout << level(first, n) << endl; break;
+				case 10: cout << "val: "; cin >> n; cout << searchTwo(first, n) << endl; break;
+				case 11: cout << "val: "; cin >> n; delSubtree(first, n); break;
+				case 12: delTree(first); break;
+				case 13: cout << "val: "; cin >> n; delNode(first, n); break;
 				default: cout << "error" << endl;
 			}
 		}
