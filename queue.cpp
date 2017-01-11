@@ -16,7 +16,7 @@ struct Queue {
 int irand() {
 	return rand() % 51 - 25;
 }
-void push(Queue *&first, Queue *&last, int val) {
+void push(Queue *&first, Queue *&last, int val) { // в конец
 	if (first) {
 		last->next = new Queue;
 		last->next->data = val;
@@ -30,7 +30,7 @@ void push(Queue *&first, Queue *&last, int val) {
 	}
 }
 
-int pop(Queue *&first, Queue *&last) {
+int shift(Queue *&first, Queue *&last) { // сдвиг. извлечение из начала.
 	if (first) {
 		int result = first->data;
 		if (first->next) {
@@ -59,14 +59,14 @@ void ui(Queue *&first, Queue *&last) {
 	int num = 1, n;
 	while (num) {
 		try {
-			cout << "\n========================\n  0 -- exit; \n  1 -- push; \n  2 -- pop; \n  3 -- printQueue;";
+			cout << "\n========================\n  0 -- exit; \n  1 -- push; \n  2 -- shift; \n  3 -- printQueue;";
 			cout << "\n========================\ninput: ";
 			cin >> num;
 			cout << endl;
 			switch (num) {
 			case 0: break;
 			case 1: cout << "val: "; cin >> n; push(first, last, n); break;
-			case 2: cout << pop(first, last) << endl; break;
+			case 2: cout << shift(first, last) << endl; break;
 			case 3: printQueue(first); break;
 			default: cout << "error" << endl;
 			}
