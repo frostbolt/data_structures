@@ -1,4 +1,3 @@
-
 #include <stdlib.h>
 #include <time.h>
 #include <iostream>
@@ -25,22 +24,24 @@ void push(Deque *&first, Deque *&last, int val) { // в конец
 		last->next->next = 0;
 		last->next->prev = last;
 		last = last->next;
-	} else {
+	}
+	else {
 		first = new Deque;
 		first->data = val;
 		first->next = first->prev = 0;
-		last=first;			
+		last = first;
 	}
 }
 
-void unshift(Deque *&first, Deque *&last, int val) { // в конец
+void unshift(Deque *&first, Deque *&last, int val) { // в начало
 	if (first) {
 		first->prev = new Deque;
 		first->prev->data = val;
 		first->prev->next = first;
 		first->prev->prev = 0;
 		first = first->prev;
-	} else {
+	}
+	else {
 		first = new Deque;
 		first->data = val;
 		first->next = first->prev = 0;
@@ -52,16 +53,18 @@ int pop(Deque *&first, Deque *&last) { // извлечение из конца.
 	if (first) {
 		int result = last->data;
 		if (last->prev) {
-			Deque *temp = last->prev;
-			delete last;
-			temp->next = 0;
-			last = temp;
-		} else {
+			Deque *temp = last;
+			last = last->prev;
+			last->next = 0;
+			delete temp;
+		}
+		else {
 			delete last;
 			first = last = 0;
 		}
 		return result;
-	} else {
+	}
+	else {
 		throw DEQUE_EMPTY;
 	}
 }
@@ -72,13 +75,16 @@ int shift(Deque *&first, Deque *&last) { // сдвиг. извлечение и�
 		if (first->next) {
 			Deque *temp = first;
 			first = first->next;
+			first->prev = 0;
 			delete temp;
-		} else {
+		}
+		else {
 			delete first;
 			first = last = 0;
 		}
 		return result;
-	} else {
+	}
+	else {
 		throw DEQUE_EMPTY;
 	}
 }
