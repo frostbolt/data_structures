@@ -5,6 +5,7 @@
 
 const int TREE_EMPTY = 0;
 const int TREE_SHORT = 1;
+const int STACK_EMPTY = 2;
 
 using namespace std;
 
@@ -109,35 +110,77 @@ int degree(BinTree *a, int val) {
 }
 
 BinTree* searchForParent(BinTree *a, int val) {
-    if ((a->left)->data == val || (a->right)->data == val) {
+    if ((a->left)->data == val || (a->right)->data == val || a == 0) {
         return a;
 	} else {
 	     return ((a->data > val)? searchForParent(a->right, val) : searchForParent(a->left, val));
 	}
 }
 
-void delTree(BinTree *a) {
+void delTree(BinTree *&a) {
 	if (!a) return;
     delTree(a->left);
     delTree(a->right);
     delete a;
+	a = 0;
 }
 
-void delSubtree(BinTree *a, int val) {
-    a = searchForParent(a,val);
-    if ((a->left)->data == val) {
-        delTree(a->left);
-        a->left = 0;
-    } else {
-        delTree(a->right);
-        a->right = 0;
-    }
+// void delSubtree(BinTree *&a, int val) {
+//     a = searchForParent(a,val);
+//     if ((a->left)->data == val) {
+//         delTree(a->left);
+//         a->left = 0;
+//     } else {
+//         delTree(a->right);
+//         a->right = 0;
+//     }
+// }
+
+// void delNode(BinTree *&a, int val) {
+//     a = searchForParent(a,val);
+//     BinTree* temp = ((a->left)->data == val)? a->left : a->right;
+// }
+
+
+// БЫСТРЕНЬКАЯ ИМПЛЕМЕНТАЦИЯ СТЕКА
+
+struct Stack {
+	BinTree *data;
+	Stack *next;
+};
+void push(Stack *&a, BinTree *val) {
+	Stack *temp = new Stack;
+	temp->data = val;
+	temp->next = a;
+	a = temp;
 }
 
-void delNode(BinTree *a, int val) {
-    a = searchForParent(a,val);
-    BinTree* temp = ((a->left)->data == val)? a->left : a->right;
+BinTree* pop(Stack *&a) {
+	if (a) {
+		BinTree *result = a->data;
+		Stack *temp = a;
+		a = a->next;
+		delete temp;
+		return result;
+	}
+	else {
+		throw STACK_EMPTY;
+	}
 }
+
+void depth(BinTree *a) {
+	if (a) {
+		Stack *treeNodes = 0;
+		push(treeNodes, a);
+		while (treeNodes) {
+			BinTree *temp = pop(treeNodes);
+			cout << temp->data << "  ";
+			if (temp->left) push(treeNodes, temp->left);
+			if (temp->right) push(treeNodes, temp->right);
+		}
+	}
+}
+
 
 int height(BinTree *a) {
 	if (a) {
@@ -153,8 +196,7 @@ void ui(BinTree *&first) {
 	while (num) {
 		try {
 			cout << "\n========================\n  0 -- exit; \n  1 -- createTree; \n  2 -- insert; \n  3 -- printTreeInARow; \n  4 -- search; \n  5 -- count;";
-			cout << "\n  6 -- countLeaves; \n  7 -- degree; \n  8 -- height; \n  9 -- level; \n 10 -- searchTwo; \n 11 -- delSubtree; \n 12 -- delTree;";
-			cout << "\n 13 -- delNode;";
+			cout << "\n  6 -- countLeaves; \n  7 -- degree; \n  8 -- height; \n  9 -- level; \n 10 -- searchTwo; \n 11 -- delTree; \n 12 -- depth;";
 			cout << "\n========================\ninput: ";
 			cin >> num;
 			cout << endl;
@@ -170,15 +212,17 @@ void ui(BinTree *&first) {
 				case 8: cout << height(first) << endl; break;
 				case 9: cout << "val: "; cin >> n; cout << level(first, n) << endl; break;
 				case 10: cout << "val: "; cin >> n; cout << searchTwo(first, n) << endl; break;
-				case 11: cout << "val: "; cin >> n; delSubtree(first, n); break;
-				case 12: delTree(first); break;
-				case 13: cout << "val: "; cin >> n; delNode(first, n); break;
+				case 11: delTree(first); break;
+				case 12: depth(first); break;
+				// case 12: cout << "val: "; cin >> n; delSubtree(first, n); break;
+				// case 13: cout << "val: "; cin >> n; delNode(first, n); break;
 				default: cout << "error" << endl;
 			}
 		}
 		catch (int ex) {
 			switch (ex) {
 				case TREE_EMPTY: cout << "TREE IS EMPTY" << endl; break;
+				case STACK_EMPTY: cout << "STACK IS EMPTY" << endl; break;
 				case TREE_SHORT: cout << "ELEMENT DOES NOT EXIST" << endl; break;
 			}
 		}
