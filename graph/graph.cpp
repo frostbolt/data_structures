@@ -62,33 +62,36 @@ public:
 		for (int i = 0; i < dimV; i++) {
 			data[i] = new int[dimE];
 		}
-		for (int i = 0; i < dimV; ++i) {
-			for (int i = 0; i < dimE; ++i)
-			{
-				/* code */
-			}
-		}
 
+		int currentEdge = 0;
+		for (int i = 0; i < dimV; ++i)
+			for (int i = 0; i < dimE; ++i)
+				if (a.getCell(i,j))	{
+					data[i][currentEdge]=1;
+					data[j][currentEdge]=1
+				}
 	}
+
 	~IncidenceMatrix(){ // очистка динамической памяти в деструкторе.
 		for (int i = 0; i < dim; i++) delete[] data[i];
 		delete data;
 	}
 
 	void print() {
-		cout << "dimention: "<<dim<<"x"<<dim<<endl;
-		for (int i = 0; i < dim; i++) {
-			for (int j = 0; j < dim; j++) cout << data[i][j] << "\t";
+		cout << "dimention: "<<dimV<<"x"<<dimE<<endl;
+		for (int i = 0; i < dimV; i++) {
+			for (int j = 0; j < dimE; j++) cout << data[i][j] << "\t";
 			cout << endl;
 		}
 	}	
 };
 
 void ui(AdjacencyMatrix first) {
+	IncidenceMatrix second(first);
 	int num = 1, n;
 	while (num) {
 		try {
-			cout << "\n========================\n  0 -- exit; \n  1 -- (AdjacencyMatrix) print;";
+			cout << "\n========================\n  0 -- exit; \n  1 -- (AdjacencyMatrix) print; \n  2 -- (IncidenceMatrix) print;";
 			cout << "\n========================\ninput: ";
 			cin >> num;
 			cout << endl;
