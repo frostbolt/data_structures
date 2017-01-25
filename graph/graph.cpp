@@ -49,7 +49,8 @@ public:
 			for (int j = 0; j < dim; j++) cout << data[i][j] << "\t";
 			cout << endl;
 		}
-	}	
+	}
+
 };
 
 class IncidenceMatrix {
@@ -165,6 +166,23 @@ public:
 		}
 		temp->next = 0;
 	}
+
+	bool hasEulerianPath() {
+		bool result = true;
+		list<list<short>*>* temp = data;
+		while (temp) {
+			list<short> *tempH = temp->inf;
+			int deg = 0;
+			while (tempH->next)	{
+				deg++;
+				tempH = tempH->next;
+			}
+			if (deg & 1) result = false;
+			temp = temp->next;
+		}
+		return result;
+	}
+
 	void print() {
 		list<list<short>*> *temp = data;
 		while (temp){
@@ -188,7 +206,7 @@ void ui(AdjacencyMatrix first) {
 	int num = 1, n;
 	while (num) {
 		try {
-			cout << "\n========================\n  0 -- exit; \n  1 -- (AdjacencyMatrix) print; \n  2 -- (IncidenceMatrix) print; \n  3 -- (EdgesMatrix) print; \n  4 -- (ListOfLinks) print;";
+			cout << "\n========================\n  0 -- exit; \n  1 -- (AdjacencyMatrix) print; \n  2 -- (IncidenceMatrix) print; \n  3 -- (EdgesMatrix) print; \n  4 -- (ListOfLinks) print; \n  5 -- (ListOfLinks) hasEulerianPath;";
 			cout << "\n========================\ninput: ";
 			cin >> num;
 			cout << endl;
@@ -198,6 +216,7 @@ void ui(AdjacencyMatrix first) {
 				case 2: second.print(); break;
 				case 3: third.print(); break;
 				case 4: fourth.print(); break;
+				case 5: cout << fourth.hasEulerianPath() << endl; break;
 				default: cout << "error" << endl;
 			}
 		}
