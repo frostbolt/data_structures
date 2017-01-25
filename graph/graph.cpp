@@ -3,10 +3,11 @@
 #include <fstream>
 #include <conio.h>
 #include <limits.h>
+#include <string.h> // для memcpy
 
 const int MATRIX_EMPTY = 0;
 const int WRONG_FILE = 1;
-const short INFINITY = SHRT_MAX;
+const short INFINITY = 32767;
 
 using namespace std;
 
@@ -15,6 +16,12 @@ struct list {
 	T inf;
 	list* next;
 };
+
+
+short min(short a,short b){
+	return (a<b)?a:b;
+}
+
 
 class WeightedMatrix {
 	short dim;
@@ -27,23 +34,32 @@ public:
 			data = new short *[dim];
 			for (int i = 0; i < dim; i++) {
 				data[i] = new short[dim];
-				for (int j = 0; j < dim; j++) file >> data[i][j];
+				for (int j = 0; j < dim; j++) {
+					file >> data[i][j];
+					//if(!data[i][j]) data[i][j] = INFINITY;
+				}
 			}
 		} else throw(WRONG_FILE);
 	}
 
-	WeightedMatrix(short dim1) {
+	WeightedMatrix(short **data1, short dim1) {
 		dim = dim1;
 		data = new short *[dim];
 		for (int i = 0; i < dim; i++) {
 			data[i] = new short[dim];
 			for (int j = 0; j < dim; j++) data[i][j]=0;
 		}
+		memcpy(data, data1, sizeof(data)*sizeof(data)); 
 	}
 
 	WeightedMatrix floydAlorythm() {
-		WeightedMatrix result(dim);
-
+		WeightedMatrix result(data, dim);
+		for (short k = 0; k < dim; k++)
+			for (short i = 0; i < dim; i++)
+				for (short j = 0; j < dim; j++)
+					if (result.data[i][k] < INFINITY && result.data[k][j] < INFINITY)
+						result.data[i][j] = min(result.data[i][j], result.data[i][k] + result.data[k][j]);
+		return result;
 	}
 
 	void print() {
@@ -262,14 +278,16 @@ public:
 	}
 };
 
-void ui(AdjacencyMatrix first) {
+void ui(const char pathToFile1[256], const char pathToFile2[256]) {
+	AdjacencyMatrix first(pathToFile1);
 	IncidenceMatrix second(first);
 	EdgesMatrix third(first);
 	ListOfLinks fourth(first);
+	WeightedMatrix sixth(pathToFile2);
 	int num = 1, n;
 	while (num) {
 		try {
-			cout << "\n========================\n  0 -- exit; \n  1 -- (AdjacencyMatrix) print; \n  2 -- (IncidenceMatrix) print; \n  3 -- (EdgesMatrix) print; \n  4 -- (ListOfLinks) print; \n  5 -- (ListOfLinks) hasEulerianPath;";
+			cout << "\n========================\n  0 -- exit; \n  1 -- (AdjacencyMatrix) print; \n  2 -- (IncidenceMatrix) print; \n  3 -- (EdgesMatrix) print; \n  4 -- (ListOfLinks) print; \n  5 -- (ListOfLinks) hasEulerianPath; \n  6 -- Floyd Alorythm;";
 			cout << "\n========================\ninput: ";
 			cin >> num;
 			cout << endl;
@@ -280,6 +298,7 @@ void ui(AdjacencyMatrix first) {
 				case 3: third.print(); break;
 				case 4: fourth.print(); break;
 				case 5: cout << fourth.hasEulerianPath() << endl; break;
+				case 6: sixth.print(); (sixth.floydAlorythm()).print(); break;
 				default: cout << "error" << endl;
 			}
 		}
@@ -295,7 +314,6 @@ void ui(AdjacencyMatrix first) {
 
 
 int main() {
-	AdjacencyMatrix first("adj.txt");
-	ui(first);
+	ui("adj.txt", "weightedAdj.txt");
 	return 0;
 }
