@@ -1,11 +1,12 @@
 #include <stdlib.h>
-#include <time.h>
 #include <iostream>
 #include <fstream>
 #include <conio.h>
+#include <limits.h>
 
 const int MATRIX_EMPTY = 0;
 const int WRONG_FILE = 1;
+const short INFINITY = SHRT_MAX;
 
 using namespace std;
 
@@ -13,6 +14,50 @@ template <typename T>
 struct list {
 	T inf;
 	list* next;
+};
+
+class WeightedMatrix {
+	short dim;
+	short **data;
+public:
+	WeightedMatrix(const char pathToFile[256]){
+		ifstream file(pathToFile);
+		if (file.is_open())	{
+			file >> dim;
+			data = new short *[dim];
+			for (int i = 0; i < dim; i++) {
+				data[i] = new short[dim];
+				for (int j = 0; j < dim; j++) file >> data[i][j];
+			}
+		} else throw(WRONG_FILE);
+	}
+
+	WeightedMatrix(short dim1) {
+		dim = dim1;
+		data = new short *[dim];
+		for (int i = 0; i < dim; i++) {
+			data[i] = new short[dim];
+			for (int j = 0; j < dim; j++) data[i][j]=0;
+		}
+	}
+
+	WeightedMatrix floydAlorythm() {
+		WeightedMatrix result(dim);
+
+	}
+
+	void print() {
+		cout << "dimention: "<<dim<<"x"<<dim<<endl;
+		for (int i = 0; i < dim; i++) {
+			for (int j = 0; j < dim; j++) cout << data[i][j] << "\t";
+			cout << endl;
+		}
+	}
+
+	~WeightedMatrix() {
+		for (int i = 0; i < dim; i++) delete[] data[i];
+		delete data;
+	}	
 };
 
 class AdjacencyMatrix {
@@ -23,7 +68,7 @@ public:
 		ifstream file(pathToFile);
 		if (file.is_open())	{
 			file >> dim;
-			data = new short *[dim]; // кв. матрица.
+			data = new short *[dim];
 			for (int i = 0; i < dim; i++) {
 				data[i] = new short[dim];
 				for (int j = 0; j < dim; j++) file >> data[i][j];
@@ -51,6 +96,7 @@ public:
 		}
 	}
 };
+
 
 
 class IncidenceMatrix {
