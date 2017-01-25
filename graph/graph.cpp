@@ -17,15 +17,15 @@ struct list {
 
 class AdjacencyMatrix {
 	short dim;
-	bool **data;
+	short **data;
 public:
 	AdjacencyMatrix(const char pathToFile[256]){ // инициализация с помощью файла.
 		ifstream file(pathToFile);
 		if (file.is_open())	{
 			file >> dim;
-			data = new bool *[dim]; // кв. матрица.
+			data = new short *[dim]; // кв. матрица.
 			for (int i = 0; i < dim; i++) {
-				data[i] = new bool[dim];
+				data[i] = new short[dim];
 				for (int j = 0; j < dim; j++) file >> data[i][j];
 			}
 		} else throw(WRONG_FILE);
@@ -50,8 +50,8 @@ public:
 			cout << endl;
 		}
 	}
-
 };
+
 
 class IncidenceMatrix {
 	int dimV, dimE;
@@ -132,6 +132,16 @@ public:
 	}	
 };
 
+template <typename T>
+void memfree(list<T> *&a) {
+	while(a) {
+		list<T>* prev = a;
+		a = a->next;
+		delete prev;
+	}
+	delete a;
+}
+
 class ListOfLinks {
 	list<list<short>*> *data;
 public:
@@ -196,7 +206,14 @@ public:
 		}
 
 	}
-	~ListOfLinks(){}
+
+	~ListOfLinks(){
+		list<list<short>*>* temp = data;
+		while(temp) {
+			memfree(temp->inf);
+		}
+		memfree(data);
+	}
 };
 
 void ui(AdjacencyMatrix first) {
