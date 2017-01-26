@@ -65,7 +65,12 @@ public:
 	void print() {
 		cout << "dimention: "<<dim<<"x"<<dim<<endl;
 		for (int i = 0; i < dim; i++) {
-			for (int j = 0; j < dim; j++) cout << data[i][j] << "\t";
+			for (int j = 0; j < dim; j++) 
+				if (data[i][j]!=INFINITY) {
+					cout << data[i][j] << "\t";
+				} else {
+					cout << "~" << "\t";
+				}
 			cout << endl;
 		}
 	}
