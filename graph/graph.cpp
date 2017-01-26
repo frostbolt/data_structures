@@ -167,7 +167,7 @@ public:
 	EdgesMatrix(AdjacencyMatrix a){
 		dimE = 0;
 		int aDim=a.getDim();
-		for (int i = 0; i <aDim; i++) {
+		for (int i = 0; i < aDim; i++) {
 			for (int j = i+1; j < aDim; j++) {
 				dimE += a.getCell(i,j);
 			}
@@ -285,14 +285,15 @@ public:
 };
 
 void ui(const char pathToFile1[256], const char pathToFile2[256]) {
-	AdjacencyMatrix first(pathToFile1);
-	IncidenceMatrix second(first);
-	EdgesMatrix third(first);
-	ListOfLinks fourth(first);
-	WeightedMatrix sixth(pathToFile2);
-	int num = 1, n;
-	while (num) {
-		try {
+	try {
+		AdjacencyMatrix first(pathToFile1);
+		IncidenceMatrix second(first);
+		EdgesMatrix third(first);
+		ListOfLinks fourth(first);
+		WeightedMatrix sixth(pathToFile2);
+		int num = 1, n;
+		while (num) {
+			
 			cout << "\n========================\n  0 -- exit; \n  1 -- (AdjacencyMatrix) print; \n  2 -- (IncidenceMatrix) print; \n  3 -- (EdgesMatrix) print; \n  4 -- (ListOfLinks) print; \n  5 -- (ListOfLinks) hasEulerianPath; \n  6 -- Floyd Alorythm;";
 			cout << "\n========================\ninput: ";
 			cin >> num;
@@ -308,12 +309,12 @@ void ui(const char pathToFile1[256], const char pathToFile2[256]) {
 				default: cout << "error" << endl;
 			}
 		}
-		catch (int ex) {
-			switch (ex) {
-				case MATRIX_EMPTY: cout << "MATRIX IS EMPTY" << endl; break;
-				case WRONG_FILE: cout << "FILE IS DAMAGED OR COULD NOT BE OPENED" << endl; break;
+	}
+	catch (int ex) {
+		switch (ex) {
+			case MATRIX_EMPTY: cout << "MATRIX IS EMPTY" << endl; break;
+			case WRONG_FILE: cout << "FILE IS DAMAGED OR COULD NOT BE OPENED" << endl; break;
 
-			}
 		}
 	}
 }
