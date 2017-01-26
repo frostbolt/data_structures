@@ -2,7 +2,6 @@
 #include <iostream>
 #include <fstream>
 #include <conio.h>
-#include <limits.h>
 #include <string.h> // для memcpy
 
 const int MATRIX_EMPTY = 0;
@@ -49,7 +48,9 @@ public:
 			data[i] = new short[dim];
 			for (int j = 0; j < dim; j++) data[i][j]=0;
 		}
-		memcpy(data, data1, sizeof(data)*sizeof(data)); 
+		for (int i = 0; i < dim; i++){
+			memcpy(data[i], data1[i], sizeof(data1)*dim);
+		}
 	}
 
 	WeightedMatrix floydAlorythm() {
