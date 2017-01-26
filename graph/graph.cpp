@@ -36,7 +36,7 @@ public:
 				data[i] = new short[dim];
 				for (int j = 0; j < dim; j++) {
 					file >> data[i][j];
-					//if(!data[i][j]) data[i][j] = INFINITY;
+					if(!data[i][j]) data[i][j] = INFINITY;
 				}
 			}
 		} else throw(WRONG_FILE);
