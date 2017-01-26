@@ -53,7 +53,7 @@ public:
 		}
 	}
 
-	WeightedMatrix floydAlorythm() {
+	WeightedMatrix floydAlgorithm() {
 		WeightedMatrix result(data, dim);
 		for (short k = 0; k < dim; k++)
 			for (short i = 0; i < dim; i++)
@@ -305,7 +305,7 @@ void ui(const char pathToFile1[256], const char pathToFile2[256]) {
 				case 3: third.print(); break;
 				case 4: fourth.print(); break;
 				case 5: cout << fourth.hasEulerianPath() << endl; break;
-				case 6: sixth.print(); (sixth.floydAlorythm()).print(); break;
+				case 6: sixth.print(); (sixth.floydAlgorithm()).print(); break;
 				default: cout << "error" << endl;
 			}
 		}
