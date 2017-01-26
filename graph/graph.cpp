@@ -30,6 +30,7 @@ public:
 		ifstream file(pathToFile);
 		if (file.is_open())	{
 			file >> dim;
+			if (!dim) throw(MATRIX_EMPTY);
 			data = new short *[dim];
 			for (int i = 0; i < dim; i++) {
 				data[i] = new short[dim];
@@ -48,9 +49,7 @@ public:
 			data[i] = new short[dim];
 			for (int j = 0; j < dim; j++) data[i][j]=0;
 		}
-		for (int i = 0; i < dim; i++){
-			memcpy(data[i], data1[i], sizeof(data1)*dim);
-		}
+		memcpy(data, data1, sizeof(short)*dim*dim);
 	}
 
 	WeightedMatrix floydAlgorithm() {
@@ -86,10 +85,11 @@ class AdjacencyMatrix {
 	short dim;
 	short **data;
 public:
-	AdjacencyMatrix(const char pathToFile[256]){ // инициализация с помощью файла.
+	AdjacencyMatrix(const char pathToFile[256]){
 		ifstream file(pathToFile);
 		if (file.is_open())	{
 			file >> dim;
+			if (!dim) throw(MATRIX_EMPTY);
 			data = new short *[dim];
 			for (int i = 0; i < dim; i++) {
 				data[i] = new short[dim];
@@ -97,7 +97,7 @@ public:
 			}
 		} else throw(WRONG_FILE);
 	}
-	~AdjacencyMatrix(){ // очистка динамической памяти в деструкторе.
+	~AdjacencyMatrix(){ 
 		for (int i = 0; i < dim; i++) delete[] data[i];
 		delete data;
 	}
@@ -146,7 +146,7 @@ public:
 				}
 	}
 
-	~IncidenceMatrix(){ // очистка динамической памяти в деструкторе.
+	~IncidenceMatrix(){ 
 		for (int i = 0; i < dimV; i++) delete[] data[i];
 		delete data;
 	}
@@ -186,7 +186,7 @@ public:
 				}
 	}
 
-	~EdgesMatrix(){ // очистка динамической памяти в деструкторе.
+	~EdgesMatrix(){ 
 		for (int i = 0; i < dimE; i++) delete[] data[i];
 		delete data;
 	}
